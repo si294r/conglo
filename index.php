@@ -19,6 +19,7 @@ if (function_exists("getallheaders")) {
     $headers['x-api-key'] = isset($_SERVER["CONGLO_TOKEN"]) ? $_SERVER["CONGLO_TOKEN"] : "";
     $headers['Content-Type'] = isset($_SERVER["CONTENT_TYPE"]) ? $_SERVER["CONTENT_TYPE"] : "";
 }
+var_dump($headers);
 if (!isset($headers['x-api-key']) || $headers['x-api-key'] != CONGLO_TOKEN) {
     show_error(401, "401 Unauthorized", "Invalid Token");
 }

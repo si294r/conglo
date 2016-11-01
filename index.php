@@ -16,10 +16,10 @@ function show_error($response_code, $status_code, $message) {
 if (function_exists("getallheaders")) {
     $headers = getallheaders();
 } else {
-    $headers['x-api-key'] = isset($_SERVER["CONGLO_TOKEN"]) ? $_SERVER["CONGLO_TOKEN"] : "";
+    $headers['x-api-key'] = isset($_SERVER["HTTP_X_API_KEY"]) ? $_SERVER["HTTP_X_API_KEY"] : "";
     $headers['Content-Type'] = isset($_SERVER["CONTENT_TYPE"]) ? $_SERVER["CONTENT_TYPE"] : "";
 }
-var_dump($headers);
+//var_dump($headers);
 if (!isset($headers['x-api-key']) || $headers['x-api-key'] != CONGLO_TOKEN) {
     show_error(401, "401 Unauthorized", "Invalid Token");
 }

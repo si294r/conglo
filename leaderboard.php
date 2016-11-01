@@ -41,12 +41,12 @@ function display_name_expired($value) {
     return false;
 }
 
-function get_global_score(&$result) {
+function get_global(&$result) {
 
     global $config, $document, $db, $facebook_id, $limit;
 
-    $filter = array('score' => array('$gte' => 0));
-    $sort = array('score' => -1, 'facebook_id' => -1); // desc(-1), asc(1)
+    $filter = array('value1' => array('$gte' => 0));
+    $sort = array('value1' => -1, 'facebook_id' => -1); // desc(-1), asc(1)
     $options = array('sort' => $sort, 'limit' => (int) $limit);
 
     $documents = $db->User->find($filter, $options);
@@ -55,9 +55,9 @@ function get_global_score(&$result) {
     $result['currentUser'] = bson_document_to_array($document);
     $result['topPlayer'] = bson_documents_to_array($documents);
 
-    $score = isset($document->score) ? $document->score : 0;
-    $count1 = $db->User->count(array('score' => array('$gt' => $score)));
-    $count2 = $db->User->count(array('score' => array('$eq' => $score), 'facebook_id' => array('$gte' => $facebook_id)));
+    $value1 = isset($document->value1) ? $document->value1 : 0;
+    $count1 = $db->User->count(array('value1' => array('$gt' => $value1)));
+    $count2 = $db->User->count(array('value1' => array('$eq' => $value1), 'facebook_id' => array('$gte' => $facebook_id)));
 
     $i = 1;
     $facebook_ids = [];
@@ -110,7 +110,7 @@ function get_global_score(&$result) {
     }
 }
 
-function get_friend_score(&$result) {
+function get_friend(&$result) {
 
     global $config, $document, $db, $facebook_id, $limit;
 
@@ -132,8 +132,8 @@ function get_friend_score(&$result) {
         goto get_facebook_friends;
     }
 
-    $filter = array('score' => array('$gte' => 0), 'facebook_id' => array('$in' => $filter_friends));
-    $sort = array('score' => -1, 'facebook_id' => -1); // desc(-1), asc(1)
+    $filter = array('value1' => array('$gte' => 0), 'facebook_id' => array('$in' => $filter_friends));
+    $sort = array('value1' => -1, 'facebook_id' => -1); // desc(-1), asc(1)
     $options = array('sort' => $sort, 'limit' => (int) $limit);
 
     $documents = $db->User->find($filter, $options);
@@ -143,15 +143,15 @@ function get_friend_score(&$result) {
     $result['topPlayer'] = bson_documents_to_array($documents);
 //$result['count_friend'] = count($friends);
 
-    $score = isset($document->score) ? $document->score : 0;
+    $value1 = isset($document->value1) ? $document->value1 : 0;
     $count1 = $db->User->count(array(
         'facebook_id' => array('$in' => $filter_friends),
-        'score' => array('$gt' => $score)
+        'value1' => array('$gt' => $value1)
     ));
     $count2 = $db->User->count(array('$and' =>
         array(
             array('facebook_id' => array('$in' => $filter_friends)),
-            array('score' => array('$eq' => $score)),
+            array('value1' => array('$eq' => $value1)),
             array('facebook_id' => array('$gte' => $facebook_id))
         )
     ));
@@ -189,7 +189,7 @@ function get_friend_score(&$result) {
 
 $result = array('status' => true, 'global' => array(), 'friend' => array());
 
-get_global_score($result['global']);
-//get_friend_score($result['friend']);
+get_global($result['global']);
+//get_friend($result['friend']);
 
 return $result;

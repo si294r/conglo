@@ -33,6 +33,7 @@ if (is_object($document)) {
 } else {
     $data['created_date'] = date('Y-m-d H:i:s');
     $db->User->insertOne($data);
+    $affected_row = 1;
     return array("status" => FALSE, "affected_row" => $affected_row, "message" => "User not found"); 
 }
 
